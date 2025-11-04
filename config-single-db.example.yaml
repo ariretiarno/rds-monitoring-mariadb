@@ -1,0 +1,36 @@
+# MariaDB Encryption Migration Monitor - Single Database Configuration
+# This is the simple format for monitoring a single database pair
+
+# Global settings
+monitoring_interval: "30s"
+replica_lag_threshold: "60s"
+web_server_port: 8080
+log_level: "info"
+
+# Single database pair (will be automatically converted to database_pairs format)
+database_pairs:
+  - name: "default"
+    source_db:
+      host: "source-db.example.com"
+      port: 3306
+      username: "monitor_user"
+      password: "your_password"
+      database: "your_database"
+    target_db:
+      host: "target-db.example.com"
+      port: 3306
+      username: "monitor_user"
+      password: "your_password"
+      database: "your_database"
+    tables_to_monitor:
+      - "users"
+      - "orders"
+      - "products"
+
+# Environment variable overrides:
+# - SOURCE_DB_HOST
+# - SOURCE_DB_USERNAME
+# - SOURCE_DB_PASSWORD
+# - TARGET_DB_HOST
+# - TARGET_DB_USERNAME
+# - TARGET_DB_PASSWORD

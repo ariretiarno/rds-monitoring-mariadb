@@ -1,0 +1,102 @@
+# MariaDB Encryption Migration Monitor - Multi-Database Configuration Example
+# This example shows how to monitor multiple database pairs simultaneously
+
+# Global monitoring settings
+monitoring_interval: "30s"        # How often to check metrics (minimum 10s)
+replica_lag_threshold: "10s"      # Alert when lag exceeds this value
+web_server_port: 8080             # Port for web interface
+log_level: "info"                 # Log level: debug, info, warn, error
+
+# Define multiple database pairs to monitor
+database_pairs:
+  
+  # Example 1: Production database
+  - name: "production-db"
+    source_db:
+      host: "prod-source.us-east-1.rds.amazonaws.com"
+      port: 3306
+      username: "monitor_user"
+      password: "secure_password_1"
+      database: "production"
+    target_db:
+      host: "prod-target.us-east-1.rds.amazonaws.com"
+      port: 3306
+      username: "monitor_user"
+      password: "secure_password_1"
+      database: "production"
+    tables_to_monitor:
+      - "users"
+      - "orders"
+      - "products"
+      - "inventory"
+      - "transactions"
+
+  # Example 2: Analytics database
+  - name: "analytics-db"
+    source_db:
+      host: "analytics-source.us-west-2.rds.amazonaws.com"
+      port: 3306
+      username: "monitor_user"
+      password: "secure_password_2"
+      database: "analytics"
+    target_db:
+      host: "analytics-target.us-west-2.rds.amazonaws.com"
+      port: 3306
+      username: "monitor_user"
+      password: "secure_password_2"
+      database: "analytics"
+    tables_to_monitor:
+      - "events"
+      - "metrics"
+      - "reports"
+      - "aggregations"
+
+  # Example 3: Customer database
+  - name: "customer-db"
+    source_db:
+      host: "customer-source.eu-west-1.rds.amazonaws.com"
+      port: 3306
+      username: "monitor_user"
+      password: "secure_password_3"
+      database: "customers"
+    target_db:
+      host: "customer-target.eu-west-1.rds.amazonaws.com"
+      port: 3306
+      username: "monitor_user"
+      password: "secure_password_3"
+      database: "customers"
+    tables_to_monitor:
+      - "customer_profiles"
+      - "addresses"
+      - "payment_methods"
+      - "preferences"
+      - "subscriptions"
+
+  # Example 4: Logging database (with many tables)
+  - name: "logging-db"
+    source_db:
+      host: "logs-source.example.com"
+      port: 3306
+      username: "monitor_user"
+      password: "secure_password_4"
+      database: "logs"
+    target_db:
+      host: "logs-target.example.com"
+      port: 3306
+      username: "monitor_user"
+      password: "secure_password_4"
+      database: "logs"
+    tables_to_monitor:
+      - "access_logs"
+      - "error_logs"
+      - "audit_logs"
+      - "security_logs"
+      - "application_logs"
+      - "system_logs"
+
+# Notes:
+# - Each database pair must have a unique name
+# - You can monitor as many database pairs as needed
+# - Each pair can have its own list of tables to monitor
+# - All pairs share the same monitoring interval and lag threshold
+# - Environment variables can override credentials for the first pair only

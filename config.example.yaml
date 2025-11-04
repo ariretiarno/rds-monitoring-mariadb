@@ -1,0 +1,35 @@
+# MariaDB Encryption Migration Monitor - Example Configuration
+# Copy this file to config.yaml and update with your database details
+
+# Source database (unencrypted)
+source_db:
+  host: "localhost"
+  port: 3306
+  username: "root"
+  password: "password"
+  database: "testdb"
+
+# Target database (encrypted)
+target_db:
+  host: "localhost"
+  port: 3307
+  username: "root"
+  password: "password"
+  database: "testdb"
+
+# Monitoring interval (minimum 10 seconds)
+monitoring_interval: "30s"
+
+# Replica lag threshold for alerts
+replica_lag_threshold: "60s"
+
+# Web server port
+web_server_port: 8080
+
+# Tables to monitor (leave empty to skip table-level checks)
+tables_to_monitor:
+  - "users"
+  - "orders"
+
+# Log level
+log_level: "info"

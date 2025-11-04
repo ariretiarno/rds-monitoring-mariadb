@@ -1,0 +1,58 @@
+# Docker Compose example for testing the monitor with local MariaDB instances
+# This sets up source and target databases for testing purposes
+
+version: '3.8'
+
+services:
+  # Source database (unencrypted)
+  source-db:
+    image: mariadb:10.11
+    container_name: mariadb-source
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: monitor_user
+      MYSQL_PASSWORD: monitor_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - source-data:/var/lib/mysql
+    command: --server-id=1 --log-bin=mysql-bin --binlog-format=ROW
+
+  # Target database (simulating encrypted replica)
+  target-db:
+    image: mariadb:10.11
+    container_name: mariadb-target
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: monitor_user
+      MYSQL_PASSWORD: monitor_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - target-data:/var/lib/mysql
+    command: --server-id=2 --log-bin=mysql-bin --binlog-format=ROW
+    depends_on:
+      - source-db
+
+  # Monitoring application
+  monitor:
+    build: .
+    container_name: mariadb-monitor
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config.yaml:/root/config.yaml
+    depends_on:
+      - source-db
+      - target-db
+    environment:
+      - SOURCE_DB_HOST=source-db
+      - SOURCE_DB_PASSWORD=monitor_pass
+      - TARGET_DB_HOST=target-db
+      - TARGET_DB_PASSWORD=monitor_pass
+
+volumes:
+  source-data:
+  target-data:
